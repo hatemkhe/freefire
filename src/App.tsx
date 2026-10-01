@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// المعرفات الصحيحة والنهائية
+// بيانات EmailJS الخاصة بحسابك
 const EMAILJS_SERVICE_ID = 'service_fyhamvf';
 const EMAILJS_TEMPLATE_ID = '31e79x5';
 const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
