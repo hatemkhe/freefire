@@ -2,15 +2,10 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// البيانات الصحيحة والجديدة الخاصة بحسابك في EmailJS
+// البيانات الخاصة بحسابك في EmailJS
 const EMAILJS_SERVICE_ID = 'service_fyhamvf';
 const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
 const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
-
-// تهيئة EmailJS بالمفتاح العام
-emailjs.init({
-  publicKey: EMAILJS_PUBLIC_KEY,
-});
 
 interface Option {
   id: string;
@@ -76,6 +71,7 @@ export default function App() {
     setIsSending(true);
 
     try {
+      // إرسال البيانات مباشرة مع تمرير الـ Public Key كمعلمة رابعة
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
