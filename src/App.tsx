@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// مفاتيح EmailJS الخاصة بك
 const EMAILJS_SERVICE_ID = 'service_wpql07u';
 const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
 const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
@@ -16,15 +15,15 @@ interface Option {
 }
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isSignUp, setIsSignUp] = useState<boolean>(false);
   
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [isSending, setIsSending] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [isSending, setIsSending] = useState<boolean>(false);
 
   const [options, setOptions] = useState<Option[]>([
     {
