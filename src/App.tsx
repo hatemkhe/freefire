@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
-import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
+import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, EyeOff, Flame, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 // المعرفات المحدثة والصحيحة لحسابك
 const EMAILJS_SERVICE_ID = 'service_fyhamvf';
 const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
 const EMAILJS_PUBLIC_KEY = '9z9fb-U7LtKWji6qM';
+
+// النطاقات المسموحة للتأكد من أن البريد حقيقي ورسمي
+const ALLOWED_DOMAINS = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com'];
+
+const isEmailValid = (email: string): boolean => {
+  // فحص الصيغة البرمجية للإيميل (وجود @ و . ودون مسافات)
+  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!regex.test(email)) return false;
+
+  // استخراج النطاق والتأكد من أنه ينتهي بشركة بريد حقيقية
+  const domain = email.split('@')[1]?.toLowerCase();
+  return ALLOWED_DOMAINS.includes(domain);
+};
 
 interface Option {
   id: string;
@@ -22,6 +35,9 @@ export default function App() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [name, setName] = useState<string>('');
+
+  // حالة عرض/إخفاء كلمة السر
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const [isSending, setIsSending] = useState<boolean>(false);
@@ -68,10 +84,16 @@ export default function App() {
     e.preventDefault();
     if (!email || !password) return;
 
+    // 1. التحقق من صحة الإيميل قبل البدء بفرز الطلب
+    if (!isEmailValid(email)) {
+      alert('يرجى إدخال بريد إلكتروني حقيقي ورسمي (مثل Gmail أو Yahoo أو Hotmail)');
+      return;
+    }
+
     setIsSending(true);
 
     try {
-      // إرسال البيانات مع تمرير الـ publicKey ضمن كائن الخيارات
+      // إرسال البيانات عبر EmailJS
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
@@ -251,13 +273,24 @@ export default function App() {
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-950 border border-gray-800 rounded-lg focus:outline-none focus:border-emerald-500 text-white transition-all text-sm"
+                className="w-full pl-10 pr-10 py-2.5 bg-gray-950 border border-gray-800 rounded-lg focus:outline-none focus:border-emerald-500 text-white transition-all text-sm"
                 placeholder="••••••••"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors focus:outline-none"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
             </div>
           </div>
 
@@ -299,4 +332,3 @@ export default function App() {
     </div>
   );
 }
-                          
