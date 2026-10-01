@@ -1,0 +1,6 @@
+{
+  "name": "MonoCanvas - Minimalist Drawing Studio",
+  "description": "Minimalist canvas studio with account authentication, dedicated pen and eraser tools, and single-artwork storage per user.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
