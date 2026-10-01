@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Free Fire
 
-# Run and deploy your AI Studio app
+A web application built with React, Vite, and Tailwind CSS.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/98e53101-0777-411b-9d12-161755e69fda
+- **User Interface**: Modern responsive layout and animations.
+- **Authentication**: Simple account management system.
+- **Real-time Interactions**: Smooth client-side performance.
 
-## Run Locally
+## Tech Stack
 
-**Prerequisites:**  Node.js
+- **Frontend**: React 19, TypeScript, Tailwind CSS
+- **Build Tool**: Vite
+- **Icons**: Lucide React
+- **Animations**: Motion
 
+## Getting Started
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerequisites
+
+Ensure you have [Node.js](https://nodejs.org/) installed on your system.
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/your-username/free-fire.git](https://github.com/your-username/free-fire.git)
+   cd free-fire
